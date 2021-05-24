@@ -53,6 +53,12 @@ typedef struct XM_receiver
     int packet_size;
 } XM_rx;
 
+// Function Prototypes
+void XM_receiver_init(XM_rx *r, int timeout, int packet_size);
+char XM_receiver_prepare_response(XM_rx *r);
+rx_state XM_receiver_new_data(XM_rx *r, char *data, int len);
+rx_state XM_receiver_new_char(XM_rx *r, char c);
+
 /*
     TODO learn to use doxygen and write decent documentation
 
@@ -70,13 +76,13 @@ void XM_receiver_init(XM_rx *r, int timeout, int packet_size)
 }
 
 /*
-    when the receiver returns an ERROR state, it can be useful
-    to know exactly what error we are talking about.
-    The receiver goes back to a W_SOH
+    Since the library is detached from the comunication logic,
+    this function is useful for the user to call in order to send
+    the correct response
 */
-rx_err XM_receiver_get_error(XM_rx *r)
+char XM_receiver_prepare_response(XM_rx *r)
 {
-    return r->err;
+    // TODO to complete
 }
 
 /*
@@ -170,7 +176,7 @@ rx_state XM_receiver_new_char(XM_rx *r, char c)
         break;
     // Waiting for checksum
     case W_CHECKSUM:
-        if (c == XMcommon_calculate_checksum(r->buffer[r->index], r->packet_size))
+        if (c == XMcommon_calculate_checksum(r->buffer + r->index, r->packet_size))
         {
             // Checksum passed, confirm data and prepare for next packet
             r->state = W_SOH;

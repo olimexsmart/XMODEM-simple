@@ -10,6 +10,10 @@
 #define ACK 0x06 // Acknowledge
 #define NAK 0x15 // Not Acknowledge
 
+// Function Prototypes
+char XMcommon_calculate_checksum(char *data, int len);
+
+
 /*
     Calculate checksum of data
 */
